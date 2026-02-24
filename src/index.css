@@ -23,17 +23,17 @@
 }
 
 [data-theme='dark'] {
-  /* Dark theme (elegant black) */
+  /* Dark theme (elegant black) – optimized contrast */
   --bg-page: #050505;
-  --bg-page-alt: #050505;
-  --ink: #f9f9f9;
-  --ink-muted: #a3a3a3;
-  --accent: #f9f9f9;
-  --accent-soft: #2b2b2b;
+  --bg-page-alt: #0a0a0a;
+  --ink: #f4f4f5;
+  --ink-muted: #d4d4d8;
+  --accent: #f4f4f5;
+  --accent-soft: #27272a;
   --accent-deep: #ffffff;
-  --border-subtle: rgba(255, 255, 255, 0.14);
-  --card-bg: #111111;
-  --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.8);
+  --border-subtle: rgba(255, 255, 255, 0.12);
+  --card-bg: #18181b;
+  --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.6);
 }
 
 body {

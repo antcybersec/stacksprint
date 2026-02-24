@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import {
   Code2,
@@ -14,6 +14,11 @@ import {
   ArrowRight,
   Sun,
   Moon,
+  ChevronLeft,
+  ChevronRight,
+  Instagram,
+  Linkedin,
+  Github,
 } from 'lucide-react';
 import './App.css';
 
@@ -103,6 +108,48 @@ function App() {
     { title: "AI Content Tool", metric: "+180% Engagement", icon: "🤖" }
   ];
 
+  const founderPhotos = [
+    '/founder/WhatsApp_Image_2026-02-24_at_19.34.37-48840d84-11fd-43a0-af48-de2023901f72.png',
+    '/founder/WhatsApp_Image_2026-02-24_at_19.34.39__1_-e5c34f22-aa79-45b2-8437-216f3683729f.png',
+    '/founder/WhatsApp_Image_2026-02-24_at_19.34.36-9a202292-fa97-4c52-a952-fc914a9a6a82.png',
+    '/founder/WhatsApp_Image_2026-02-24_at_19.34.38-3c4bf993-0c70-4738-87d2-f2eaf740509f.png',
+    '/founder/WhatsApp_Image_2026-02-24_at_19.34.39-fb41a5fb-168d-4737-8782-a555c4c0ca91.png',
+  ];
+
+  const [founderSlideIndex, setFounderSlideIndex] = useState(0);
+
+  const goToSlide = useCallback((index: number) => {
+    setFounderSlideIndex(() => {
+      if (index < 0) return founderPhotos.length - 1;
+      if (index >= founderPhotos.length) return 0;
+      return index;
+    });
+  }, [founderPhotos.length]);
+
+  useEffect(() => {
+    const t = setInterval(() => {
+      setFounderSlideIndex((prev) => (prev + 1 >= founderPhotos.length ? 0 : prev + 1));
+    }, 4000);
+    return () => clearInterval(t);
+  }, [founderPhotos.length]);
+
+  const XIcon = () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+
+  const WHATSAPP_NUMBER = '919798285779';
+  const WHATSAPP_MESSAGE = "Hi, I'd like to discuss a project with Stack Sprint.";
+  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
+
+  const founderSocialLinks = [
+    { href: 'https://www.instagram.com/rituraj.lifts?igsh=MW1rNmI1a2t3Z3p5bw==', label: 'Instagram', icon: Instagram },
+    { href: 'https://www.linkedin.com/in/ritu-raj-verma-55b535312?utm_source=share_via&utm_content=profile&utm_medium=member_android', label: 'LinkedIn', icon: Linkedin },
+    { href: 'https://x.com/ri2rajz', label: 'X', icon: XIcon },
+    { href: 'https://github.com/ri2raz', label: 'GitHub', icon: Github },
+  ];
+
   const testimonials = [
     {
       text: "Stack Sprint transformed our online presence. The website is fast, beautiful, and converts like crazy. Best investment we made!",
@@ -175,9 +222,14 @@ function App() {
                 )}
               </button>
               <button className="btn btn-ghost">Project Deck</button>
-              <button className="btn btn-primary">
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-primary"
+              >
                 Book Intro Call
-              </button>
+              </a>
             </div>
 
             <button
@@ -245,7 +297,15 @@ function App() {
                 {theme === 'light' ? 'Switch to dark' : 'Switch to light'}
               </button>
               <button className="btn btn-ghost">Project Deck</button>
-              <button className="btn btn-primary">Book Intro Call</button>
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-primary"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Book Intro Call
+              </a>
             </div>
           </div>
         </div>
@@ -280,10 +340,15 @@ function App() {
                 internet.
               </p>
               <div className="hero-cta">
-                <button className="btn btn-primary">
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-primary"
+                >
                   Start a project
                   <ArrowRight size={18} style={{ marginLeft: 8 }} />
-                </button>
+                </a>
                 <button className="btn btn-secondary">
                   View 15‑min intro deck
                 </button>
@@ -526,8 +591,46 @@ function App() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
               >
-                <div className="founder-frame" />
-                <div className="founder-emoji">👨‍💻</div>
+                <div className="founder-frame">
+                  <div className="founder-slider">
+                    {founderPhotos.map((src, i) => (
+                      <div
+                        key={src}
+                        className={`founder-slide ${i === founderSlideIndex ? 'active' : ''}`}
+                        aria-hidden={i !== founderSlideIndex}
+                      >
+                        <img src={src} alt={`Ritu Raj Verma ${i + 1}`} />
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      className="founder-slider-btn founder-slider-prev"
+                      onClick={() => goToSlide(founderSlideIndex - 1)}
+                      aria-label="Previous photo"
+                    >
+                      <ChevronLeft size={20} />
+                    </button>
+                    <button
+                      type="button"
+                      className="founder-slider-btn founder-slider-next"
+                      onClick={() => goToSlide(founderSlideIndex + 1)}
+                      aria-label="Next photo"
+                    >
+                      <ChevronRight size={20} />
+                    </button>
+                    <div className="founder-slider-dots">
+                      {founderPhotos.map((_, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          className={`founder-dot ${i === founderSlideIndex ? 'active' : ''}`}
+                          onClick={() => setFounderSlideIndex(i)}
+                          aria-label={`Go to photo ${i + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </motion.div>
 
               <motion.div
@@ -548,6 +651,21 @@ function App() {
                   consistent training in the gym and consistent shipping in
                   your product.
                 </p>
+
+                <div className="founder-social">
+                  {founderSocialLinks.map(({ href, label, icon: Icon }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="founder-social-link"
+                      aria-label={label}
+                    >
+                      <Icon size={20} />
+                    </a>
+                  ))}
+                </div>
 
                 <div className="founder-highlights">
                   <div className="highlight-item">
@@ -632,12 +750,22 @@ function App() {
               </p>
             </div>
             <div className="cta-actions">
-              <button className="btn btn-primary btn-cta-primary">
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-primary btn-cta-primary"
+              >
                 Start a project brief
-              </button>
-              <button className="btn btn-ghost btn-cta-secondary">
+              </a>
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-ghost btn-cta-secondary"
+              >
                 Or book a 30‑min call
-              </button>
+              </a>
             </div>
           </motion.div>
         </section>
@@ -687,7 +815,7 @@ function App() {
                 <a href="#portfolio">Selected work</a>
               </li>
               <li>
-                <a href="#contact">Start a project</a>
+                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">Start a project</a>
               </li>
             </ul>
           </div>
