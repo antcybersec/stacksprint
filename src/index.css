@@ -49,6 +49,18 @@ body {
 
 html {
   scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Touch-friendly tap targets on mobile */
+@media (max-width: 900px) {
+  .btn,
+  .nav-links a,
+  .founder-social-link,
+  .founder-dot,
+  .founder-slider-btn {
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
 #root {
