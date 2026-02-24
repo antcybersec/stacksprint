@@ -1343,20 +1343,50 @@ a.btn {
     gap: 2rem;
   }
 
-  .hero-panel {
-    order: -1;
-  }
-
+  /* Text block stays first on mobile (DOM order); dashboard follows */
   .hero-title {
     font-size: clamp(2rem, 8vw, 2.7rem);
+  }
+
+  .hero-panel {
+    width: 100%;
+    max-width: 100%;
   }
 
   .hero-card {
     padding: 1.25rem 1.35rem;
   }
 
+  .hero-card-header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .hero-card-title {
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+  }
+
   .hero-stat-grid {
     gap: 0.85rem;
+  }
+
+  .hero-mini-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .hero-mini-row span:last-child {
+    font-size: 0.8rem;
+  }
+
+  .hero-orbit-pill {
+    font-size: 0.65rem;
+    padding: 0.35rem 0.65rem;
+    top: 8%;
+    right: 4%;
   }
 
   .section {
@@ -1502,6 +1532,36 @@ a.btn {
   .hero-meta {
     flex-direction: column;
     gap: 0.5rem;
+  }
+
+  /* Dashboard card: single-column stats and tighter layout on small mobile */
+  .hero-stat-grid {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .hero-stat {
+    padding: 0.7rem 0.85rem;
+  }
+
+  .hero-mini-badges {
+    width: 100%;
+  }
+
+  .hero-mini-badge {
+    font-size: 0.78rem;
+    padding: 0.35rem 0.75rem;
+  }
+
+  /* Decorative orbit: hide on very small screens to avoid overlap */
+  .hero-orbit {
+    opacity: 0.4;
+  }
+
+  .hero-orbit-pill {
+    max-width: 85%;
+    font-size: 0.62rem;
+    padding: 0.3rem 0.5rem;
   }
 
   .trust-strip {
