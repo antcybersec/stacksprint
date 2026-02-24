@@ -12,13 +12,25 @@ import {
   X,
   Star,
   ArrowRight,
-  CheckCircle2,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import './App.css';
+
+type Theme = 'light' | 'dark';
 
 function App() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window === 'undefined') return 'light';
+    const stored = window.localStorage.getItem('stack-sprint-theme');
+    if (stored === 'light' || stored === 'dark') return stored;
+    if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+    return 'light';
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,6 +39,15 @@ function App() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    window.localStorage.setItem('stack-sprint-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
 
   const services = [
     {
@@ -103,52 +124,6 @@ function App() {
     }
   ];
 
-  const pricing = [
-    {
-      name: "Starter",
-      price: "$2,999",
-      period: "one-time",
-      features: [
-        "5-Page Website",
-        "Responsive Design",
-        "SEO Optimization",
-        "Contact Forms",
-        "2 Weeks Delivery",
-        "1 Month Support"
-      ]
-    },
-    {
-      name: "Professional",
-      price: "$5,999",
-      period: "one-time",
-      featured: true,
-      badge: "Most Popular",
-      features: [
-        "10-Page Website",
-        "Custom Design",
-        "Advanced SEO",
-        "CMS Integration",
-        "E-Commerce Ready",
-        "4 Weeks Delivery",
-        "3 Months Support"
-      ]
-    },
-    {
-      name: "Enterprise",
-      price: "Custom",
-      period: "contact us",
-      features: [
-        "Unlimited Pages",
-        "Full-Stack Solution",
-        "AI Integration",
-        "Custom Features",
-        "Priority Support",
-        "Flexible Timeline",
-        "12 Months Support"
-      ]
-    }
-  ];
-
   return (
     <div className="app">
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
@@ -176,14 +151,29 @@ function App() {
                 <a href="#portfolio">Work</a>
               </li>
               <li>
-                <a href="#pricing">Packages</a>
-              </li>
-              <li>
                 <a href="#contact">Contact</a>
               </li>
             </ul>
 
             <div className="nav-actions">
+              <button
+                className="theme-toggle"
+                type="button"
+                onClick={toggleTheme}
+                aria-label="Toggle dark mode"
+              >
+                {theme === 'light' ? (
+                  <>
+                    <Moon size={14} />
+                    <span>Dark</span>
+                  </>
+                ) : (
+                  <>
+                    <Sun size={14} />
+                    <span>Light</span>
+                  </>
+                )}
+              </button>
               <button className="btn btn-ghost">Project Deck</button>
               <button className="btn btn-primary">
                 Book Intro Call
@@ -241,17 +231,19 @@ function App() {
                 </a>
               </li>
               <li>
-                <a href="#pricing" onClick={() => setMobileMenuOpen(false)}>
-                  Packages
-                </a>
-              </li>
-              <li>
                 <a href="#contact" onClick={() => setMobileMenuOpen(false)}>
                   Contact
                 </a>
               </li>
             </ul>
             <div className="mobile-nav-actions">
+              <button
+                className="btn btn-ghost"
+                type="button"
+                onClick={toggleTheme}
+              >
+                {theme === 'light' ? 'Switch to dark' : 'Switch to light'}
+              </button>
               <button className="btn btn-ghost">Project Deck</button>
               <button className="btn btn-primary">Book Intro Call</button>
             </div>
@@ -605,7 +597,7 @@ function App() {
                 >
                   <div className="stars">
                     {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} size={16} fill="#f97316" />
+                      <Star key={i} size={16} fill="currentColor" />
                     ))}
                   </div>
                   <p className="testimonial-text">“{testimonial.text}”</p>
@@ -618,54 +610,6 @@ function App() {
                       </div>
                     </div>
                   </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="section" id="pricing">
-          <div className="section-inner">
-            <div className="section-header">
-              <div>
-                <div className="section-kicker">Packages</div>
-                <h2 className="section-title">Simple, project‑based pricing</h2>
-              </div>
-              <p className="section-subtitle">
-                We scope around outcomes, not billable hours. Each package can
-                be adapted to fit your stack and roadmap.
-              </p>
-            </div>
-
-            <div className="pricing-grid">
-              {pricing.map((plan, index) => (
-                <motion.div
-                  key={plan.name}
-                  className={`pricing-card ${plan.featured ? 'featured' : ''}`}
-                  initial={{ opacity: 0, y: 14 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.07 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                >
-                  {plan.badge && (
-                    <span className="pricing-badge">{plan.badge}</span>
-                  )}
-                  <h3 className="pricing-name">{plan.name}</h3>
-                  <div className="pricing-price">{plan.price}</div>
-                  <p className="pricing-period">{plan.period}</p>
-                  <ul className="pricing-features">
-                    {plan.features.map((feature) => (
-                      <li key={feature}>
-                        <span className="pricing-check">
-                          <CheckCircle2 size={12} />
-                        </span>
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <button className="btn btn-primary" style={{ width: '100%' }}>
-                    Reserve this slot
-                  </button>
                 </motion.div>
               ))}
             </div>
@@ -741,9 +685,6 @@ function App() {
               </li>
               <li>
                 <a href="#portfolio">Selected work</a>
-              </li>
-              <li>
-                <a href="#pricing">Pricing</a>
               </li>
               <li>
                 <a href="#contact">Start a project</a>
